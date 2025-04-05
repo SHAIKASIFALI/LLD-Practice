@@ -1,19 +1,24 @@
 public class DatabaseConnection {
     private String name;
 
-    //This is the lazy initialization
+    //This is the lazy initialization + Double Locking
     private static DatabaseConnection connectionObject;
 
     private DatabaseConnection() {
         this.name = "MySQL";
     }
 
-    public static synchronized DatabaseConnection getDatabaseConnection() {
+    public static DatabaseConnection getDatabaseConnection() {
 
-        // Here we are doing the lazy initialization
         if(connectionObject == null)
         {
-            DatabaseConnection.connectionObject = new DatabaseConnection();
+            synchronized(DatabaseConnection.class)
+            {
+                if(connectionObject == null)
+                {
+                    connectionObject = new DatabaseConnection();
+                }
+            }
         }
         return connectionObject;
     }
