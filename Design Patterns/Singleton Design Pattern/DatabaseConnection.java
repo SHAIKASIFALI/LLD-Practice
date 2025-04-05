@@ -1,14 +1,20 @@
 public class DatabaseConnection {
     private String name;
 
-    //This is the early initialization
-    private static DatabaseConnection connectionObject = new DatabaseConnection();
+    //This is the lazy initialization
+    private static DatabaseConnection connectionObject;
 
     private DatabaseConnection() {
         this.name = "MySQL";
     }
 
-    public static DatabaseConnection getDatabaseConnection() {
+    public static synchronized DatabaseConnection getDatabaseConnection() {
+
+        // Here we are doing the lazy initialization
+        if(connectionObject == null)
+        {
+            DatabaseConnection.connectionObject = new DatabaseConnection();
+        }
         return connectionObject;
     }
 
